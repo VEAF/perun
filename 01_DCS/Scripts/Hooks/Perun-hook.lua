@@ -378,11 +378,6 @@ Perun.SendToPerun = function(data_id, data_package)
 		-- Add information to log file and send chat message to all that Perun connection is broken
 		Perun.AddLog("ERROR - packed dropped : " .. data_id,1)
 		if _now > Perun.lastConnectionError + Perun.ReconnectTimeout then
-			-- Informs all players that there is Peron error; below hack for DCS net.send_chat not working
-			local _all_players = net.get_player_list()
-			for PlayerIDIndex, _playerID in ipairs(_all_players) do
-				 net.send_chat_to(Perun.ConnectionError , _playerID)
-			end
 			-- Reset last error send counter
 			Perun.lastConnectionError = _now
 		end
