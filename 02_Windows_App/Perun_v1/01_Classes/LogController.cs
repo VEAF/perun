@@ -19,28 +19,28 @@ class LogController
         set;
     }
 
-    public void LogError(string strLog)
+    public void LogError(string strLog, string content = null)
     {
-        this.WriteLog(0, strLog);
+        this.WriteLog(0, strLog, content);
     }
 
-    public void LogWarning(string strLog)
+    public void LogWarning(string strLog, string content = null)
     {
-        this.WriteLog(1, strLog);
+        this.WriteLog(1, strLog, content);
     }
 
-    public void LogInfo(string strLog)
+    public void LogInfo(string strLog, string content = null)
     {
-        this.WriteLog(2, strLog);
+        this.WriteLog(2, strLog, content);
     }
 
-    public void LogDebug(string strLog)
+    public void LogDebug(string strLog, string content = null)
     {
-        this.WriteLog(3, strLog);
+        this.WriteLog(3, strLog, content);
     }
 
     // TBD - done via https://stackoverflow.com/questions/20185015/how-to-write-log-file-in-c
-    public void WriteLog(int logLevel, string strLog)
+    public void WriteLog(int logLevel, string strLog, string content = null)
     {
         if (logLevel > this.level) return;
 
@@ -48,9 +48,10 @@ class LogController
         FileStream LogFileStream = null;
         DirectoryInfo LogDirectoryInfo = null;
         FileInfo LogFileInfo;
+        string message = strLog;
 
-        string LogFilePath = Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents") + "\\Perun\\";
-        LogFilePath = LogFilePath + "Perun_Log_" + System.DateTime.Today.ToString("yyyyddMM") + "." + "txt";
+        string LogFileRootpath = Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), "Documents") + "\\Perun\\";
+        string LogFilePath = LogFileRootpath + "Perun_Log_" + System.DateTime.Today.ToString("yyyyddMM") + "." + "txt";
         LogFileInfo = new FileInfo(LogFilePath);
         LogDirectoryInfo = new DirectoryInfo(LogFileInfo.DirectoryName);
         if (!LogDirectoryInfo.Exists) LogDirectoryInfo.Create();
@@ -69,10 +70,19 @@ class LogController
                 // Do nothing 
             }
         }
+
         try
         {
+            if (content != null)
+            {
+                // write the content to a file and add the name of this file to the message
+                string contentFilename = "Perun_LogContent_" + System.DateTime.Today.ToString("o").Replace('T', '-').Replace(':', '-').Replace('+','-') + "." + "txt";
+                string contentFilepath = LogFileRootpath + contentFilename;
+                File.WriteAllText(contentFilepath, content);
+                message = strLog + " - content stored in " + contentFilename;
+            }
             LogStreamWriter = new StreamWriter(LogFileStream);
-            LogStreamWriter.WriteLine(strLog);
+            LogStreamWriter.WriteLine(message);
             LogStreamWriter.Close();
         }
         catch

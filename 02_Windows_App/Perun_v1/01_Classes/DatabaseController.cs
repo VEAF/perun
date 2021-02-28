@@ -16,10 +16,22 @@ public class DatabaseController
         {
             RawTCPFrame = "{\"type\": \"-1\"}";
         }
-        dynamic TCPFrame = JsonConvert.DeserializeObject(RawTCPFrame); // Deserialize raw data
-        string TCPFrameType = TCPFrame.type;
-        string TCPFrameTimestamp = TCPFrame.timestamp;
-        string TCPFrameInstance = TCPFrame.instance;
+        dynamic TCPFrame;
+        string TCPFrameType;
+        string TCPFrameTimestamp;
+        string TCPFrameInstance;
+        try
+        {
+            TCPFrame = JsonConvert.DeserializeObject(RawTCPFrame); // Deserialize raw data
+            TCPFrameType = TCPFrame.type;
+            TCPFrameTimestamp = TCPFrame.timestamp;
+            TCPFrameInstance = TCPFrame.instance;
+        }
+        catch (Exception)
+        {
+            LogController.instance.LogError("ERROR - SendToMySql cannot deserialize tcp frame !", RawTCPFrame);
+            return 0;
+        }
         string TCPFramePayload;
         string SQLQueryTxt;
         int ReturnValue = 1;

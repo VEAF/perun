@@ -25,7 +25,7 @@ internal class PerunHelper
         AddLog(3, ref arrLogHistory, strEntryToAdd, intDirection, intMarker, strType, bSkipGui);
     }
 
-    private static void AddLog(int logLevel, ref string[] arrLogHistory, string strEntryToAdd, int intDirection = 0, int intMarker = 0, string strType = " ", bool bSkipGui = false)
+    private static void AddLog(int logLevel, ref string[] arrLogHistory, string strEntryToAdd, int intDirection = 0, int intMarker = 0, string strType = " ", bool bSkipGui = false, string content = null)
     {
         // Declare values
         string LogDirection;
@@ -68,7 +68,7 @@ internal class PerunHelper
             Globals.AppUpdateGUI = true;
         }
         // Add the entry to log file
-        LogController.instance.WriteLog(logLevel, DateTime.Now.ToString("yyyy-MM-dd ") + " " + DateTime.Now.ToString("HH:mm:ss") + " | Instance: "+ Globals.AppInstanceID + " | " + LogMarker + " | "+ LogDirection + " | "+ strType + " | " + strEntryToAdd);
+        LogController.instance.WriteLog(logLevel, DateTime.Now.ToString("yyyy-MM-dd ") + " " + DateTime.Now.ToString("HH:mm:ss") + " | Instance: "+ Globals.AppInstanceID + " | " + LogMarker + " | "+ LogDirection + " | "+ strType + " | " + strEntryToAdd, content);
     }
 
     public static string GetAppVersion(string strBeginning)
